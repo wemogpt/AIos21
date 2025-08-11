@@ -1,21 +1,18 @@
 export const theme = {
   colors: {
-    primary: "#3b82f6",
-    secondary: "#6b7280",
-    accent: "#10b981",
-    background: "#ffffff",
-    text: "#1f2937",
+    primary: "#3182ce",
+    secondary: "#9f7aea",
+    success: "#48bb78",
+    danger: "#f56565",
+    warning: "#ed8936",
+    info: "#4299e1",
   },
   spacing: {
-    xs: "4px",
-    sm: "8px",
-    md: "16px",
-    lg: "24px",
-    xl: "32px",
-  },
-  borderRadius: {
-    sm: "4px",
-    md: "8px",
-    lg: "16px",
+    "1": "0.25rem",
+    "2": "0.5rem",
+    "3": "0.75rem",
+    "4": "1rem",
+    "5": "1.25rem",
+    "6": "1.5rem",
   },
 }

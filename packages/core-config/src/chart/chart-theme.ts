@@ -1,36 +1,18 @@
 export const chartTheme = {
-  line: {
-    stroke: "#3b82f6",
-    strokeWidth: 2,
-    dot: {
-      r: 4,
-      fill: "#3b82f6",
-    },
-    activeDot: {
-      r: 6,
-      stroke: "#ffffff",
-      strokeWidth: 2,
-    },
+  grid: {
+    stroke: "#e2e8f0",
   },
-  bar: {
-    fill: "#8884d8",
-  },
-  pie: {
-    colors: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"],
+  axis: {
+    ticks: {
+      fill: "#718096",
+    },
+    domain: {
+      stroke: "#cbd5e0",
+    },
   },
   tooltip: {
-    contentStyle: {
-      backgroundColor: "rgba(255, 255, 255, 0.8)",
-      border: "1px solid #cccccc",
-      borderRadius: "8px",
-    },
-    labelStyle: {
-      fontWeight: "bold",
-    },
-  },
-  legend: {
-    textStyle: {
-      color: "#666666",
-    },
+    background: "#ffffff",
+    color: "#1a202c",
+    border: "#e2e8f0",
   },
 }
