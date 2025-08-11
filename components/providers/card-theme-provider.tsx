@@ -1,38 +1,25 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useState, useMemo, useCallback, type ReactNode } from "react"
-import type { CardThemeConfig } from "@/types"
-import { cardThemePresets } from "@/config/card-theme"
+import { createContext, useContext, useState, useMemo } from "react"
+import { type CardThemeConfig, defaultCardTheme } from "@ipollo/core-config"
 
 interface CardThemeContextType {
   theme: CardThemeConfig
-  setTheme: React.Dispatch<React.SetStateAction<CardThemeConfig>>
-  applyPreset: (preset: CardThemeConfig) => void
+  setTheme: (theme: CardThemeConfig) => void
 }
 
 const CardThemeContext = createContext<CardThemeContextType | undefined>(undefined)
 
-export function CardThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<CardThemeConfig>(cardThemePresets[0].config)
+export const CardThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<CardThemeConfig>(defaultCardTheme)
 
-  const applyPreset = useCallback((presetConfig: CardThemeConfig) => {
-    setTheme(presetConfig)
-  }, [])
-
-  const value = useMemo(
-    () => ({
-      theme,
-      setTheme,
-      applyPreset,
-    }),
-    [theme, applyPreset],
-  )
+  const value = useMemo(() => ({ theme, setTheme }), [theme])
 
   return <CardThemeContext.Provider value={value}>{children}</CardThemeContext.Provider>
 }
 
-export function useCardTheme() {
+export const useCardTheme = () => {
   const context = useContext(CardThemeContext)
   if (context === undefined) {
     throw new Error("useCardTheme must be used within a CardThemeProvider")

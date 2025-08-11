@@ -1,0 +1,11 @@
+{
+  "sidebar": {
+    "overview": "组件总览",
+    "basic": "基础组件",
+    "navigation": "导航组件",
+    "input": "输入组件",
+    "dataDisplay": "数据展示",
+    "card": "卡片",
+    "feedback": "反馈"
+  }
+}

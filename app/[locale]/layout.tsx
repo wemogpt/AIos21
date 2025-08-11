@@ -9,7 +9,9 @@ import { DataChartThemeProvider } from "@/components/providers/data-chart-theme-
 import { DynamicBackground } from "@/components/theme/dynamic-background"
 import { cn } from "@/lib/utils"
 import { BottomNavigation } from "@/components/navigation/bottom-navigation"
-import { getDictionary, type Locale } from "@/lib/dictionaries"
+import { getDictionary } from "@/lib/dictionaries"
+import type { Locale } from "@ipollo/core-config"
+import { i18n } from "@ipollo/core-config"
 import "../globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
 }
 
 export async function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "zh" }]
+  return i18n.locales.map((locale) => ({ locale }))
 }
 
 export default async function RootLayout({

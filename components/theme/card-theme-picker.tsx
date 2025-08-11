@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Brush } from "lucide-react"
 import { useCardTheme } from "@/components/providers/card-theme-provider"
-import { cardThemePresets } from "@/config/card-theme"
+import { cardThemePresets } from "@/packages/core-config/src"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"

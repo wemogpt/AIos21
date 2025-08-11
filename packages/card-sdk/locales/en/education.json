@@ -1,0 +1,63 @@
+{
+  "educationCardCourseOverview": "Course Overview Card",
+  "educationCardCourseOverviewDescription": "A card to display key information about a course, including instructor, lessons, and price.",
+  "courseOverviewTitle": "Introduction to AI",
+  "courseOverviewInstructor": "Dr. Evelyn Reed",
+  "courseOverviewButton": "Start Learning",
+  "educationCardLessonProgress": "Lesson Progress Card",
+  "educationCardLessonProgressDescription": "Shows a user's progress in a specific course.",
+  "lessonProgressTitle": "Advanced Machine Learning",
+  "lessonProgressLesson": "Lesson 5: Deep Neural Networks",
+  "lessonProgressButton": "Continue Learning",
+  "educationCardInstructorProfile": "Instructor Profile Card",
+  "educationCardInstructorProfileDescription": "A card to introduce a course instructor.",
+  "instructorProfileName": "Dr. Alan Grant",
+  "instructorProfileBio": "Pioneering researcher in computational linguistics and AI ethics.",
+  "instructorProfileButton": "View Profile",
+  "educationCardCertificate": "Certificate of Completion Card",
+  "educationCardCertificateDescription": "A card representing a user's earned certificate.",
+  "certificateCourseName": "AI for Everyone",
+  "certificateUserName": "Alex Doe",
+  "certificateButton": "Share Certificate",
+  "educationCardUpcomingLive": "Upcoming Live Session Card",
+  "educationCardUpcomingLiveDescription": "Notifies users of an upcoming live class with a countdown.",
+  "upcomingLiveTitle": "Live Q&A: The Future of AI",
+  "upcomingLiveInstructor": "Dr. Evelyn Reed",
+  "upcomingLiveButton": "Join Now",
+  "courseOutline": "Course Outline",
+  "courseOutlineDescription": "A hierarchical list that allows users to expand and collapse course sections.",
+  "courseOutlineTitle": "Course Outline",
+  "courseOutlineSection": {
+    "title": "Basic Course",
+    "type": "Online",
+    "totalHours": "20 hours",
+    "modules": [
+      {
+        "title": "AI Basic Theory",
+        "lessons": [
+          { "id": 1, "title": "Introduction to AI Concepts", "duration": "40min" },
+          { "id": 2, "title": "History and Evolution of AI", "duration": "45min" }
+        ]
+      },
+      {
+        "title": "Machine Learning Basics",
+        "lessons": [
+          { "id": 3, "title": "Fundamental Theories of ML", "duration": "50min" },
+          { "id": 4, "title": "Classification of ML Algorithms", "duration": "45min" },
+          { "id": 5, "title": "Practical Case Studies in ML", "duration": "60min" }
+        ]
+      },
+      {
+        "title": "Deep Learning & Neural Networks",
+        "lessons": [
+          { "id": 6, "title": "Basic Concepts of Deep Learning", "duration": "40min" },
+          { "id": 7, "title": "Neural Network Architectures", "duration": "55min" },
+          { "id": 8, "title": "Introduction to Deep Learning Frameworks", "duration": "45min" }
+        ]
+      }
+    ]
+  },
+  "aiLearningCard": {
+    "viewDetails": "Explore Course"
+  }
+}

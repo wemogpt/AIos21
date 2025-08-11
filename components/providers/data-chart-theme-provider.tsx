@@ -1,6 +1,6 @@
 "use client"
 import { createContext, useContext, useState, useMemo, type ReactNode } from "react"
-import { dataChartPalettes } from "@/config/data-chart-palettes"
+import { dataChartPalettes } from "@/packages/core-config/src"
 
 interface DataChartThemeContextType {
   palette: string[]

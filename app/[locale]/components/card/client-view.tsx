@@ -1,650 +1,480 @@
 "use client"
 
-import { useState } from "react"
-import { AppCard } from "@/components/layout/app-card"
-import { ChartCard } from "@/components/data-display/chart-card"
-import { SimpleLineChart } from "@/components/data-display/simple-line-chart"
-import { Tabs } from "@/components/navigation/tabs"
-import { TagCard } from "@/components/card/tag-card"
+import type React from "react"
+import { useState, useEffect } from "react"
+import { useTypewriter } from "@/components/hooks/use-typewriter"
+import { CardThemePicker, useCardTheme } from "@/components/providers/card-theme-provider"
+import { LocalCardThemeEditor } from "@/components/theme/local-card-theme-editor"
+import { DataChartThemeProvider, useDataChartTheme } from "@/components/providers/data-chart-theme-provider"
+import { ChartThemePicker } from "@/components/theme/chart-theme-picker"
+import {
+  // Content
+  FullBleedImageCard,
+  OverlayTitleImageCard,
+  TitleBelowImageCard,
+  ButtonImageCard,
+  BorderedImageCard,
+  ImageLeftContentRightCard,
+  TagCard,
+  // Education
+  CourseOverviewCard,
+  LessonProgressCard,
+  InstructorProfileCard,
+  CertificateCard,
+  UpcomingLiveSessionCard,
+  CourseListSimple,
+  CourseListDetailed,
+  CourseOutline,
+  // E-commerce
+  ProductGridCard,
+  ProductListCard,
+  CartItemCard,
+  OrderSummaryCard,
+  PromotionCard,
+  CategoryCard,
+  ReviewCard,
+  ShippingOptionCard,
+  // Functional
+  AiLearningCard,
+} from "packages/card-sdk/src/index"
+import { CourseDisplay, BaseCard } from "@ipollo/card-sdk" // Updated import
+import { BrainCircuit } from "lucide-react"
+import type { Locale } from "@ipollo/core-config"
 
-// Import new image cards
-import { FullBleedImageCard } from "@/components/card/image-cards/full-bleed-image-card"
-import { BorderedImageCard } from "@/components/card/image-cards/bordered-image-card"
-import { OverlayTitleImageCard } from "@/components/card/image-cards/overlay-title-image-card"
-import { TitleBelowImageCard } from "@/components/card/image-cards/title-below-image-card"
-import { ButtonImageCard } from "@/components/card/image-cards/button-image-card"
-import { ImageLeftContentRightCard } from "@/components/card/image-cards/image-left-content-right-card"
-
-// Import business cards
-import { AITrainerJobCard } from "@/components/card/business-cards/ai-trainer-job-card"
-import { CityRankingCard } from "@/components/card/business-cards/city-ranking-card"
-import { SalaryComparisonCard } from "@/components/card/business-cards/salary-comparison-card"
-import { CompanyRankingCard } from "@/components/card/business-cards/company-ranking-card"
-import { SkillsMasteryCard } from "@/components/card/business-cards/skills-mastery-card"
-import { SpecialBenefitsCard } from "@/components/card/business-cards/special-benefits-card"
-import { AIProductManagerCard } from "@/components/card/business-cards/ai-product-manager-card"
-import { EducationBackgroundCard } from "@/components/card/business-cards/education-background-card"
-import { ProjectExperienceCard } from "@/components/card/business-cards/project-experience-card"
-import { KpiMetricCard } from "@/components/card/business-cards/kpi-metric-card"
-import { ProductDisplayCard } from "@/components/card/business-cards/product-display-card"
-import { TeamMemberCard } from "@/components/card/business-cards/team-member-card"
-import { OrderStatusCard } from "@/components/card/business-cards/order-status-card"
-import { Users, TrendingUp, Twitter, Linkedin, Github } from 'lucide-react'
-
-// Import education cards
-import { CourseOverviewCard } from "@/components/card/education-cards/course-overview-card"
-import { LessonProgressCard } from "@/components/card/education-cards/lesson-progress-card"
-import { InstructorProfileCard } from "@/components/card/education-cards/instructor-profile-card"
-import { CertificateCard } from "@/components/card/education-cards/certificate-card"
-import { UpcomingLiveSessionCard } from "@/components/card/education-cards/upcoming-live-session-card"
-import { AIEducationPlanCard } from "./ai-education-plan-card"
-import { BrainCircuit } from 'lucide-react'
-
-// Import the new CourseOutline component
-import { CourseOutline } from "@/components/card/education-cards/course-outline"
-
-// Import the new e-commerce card components
-import { ProductGridCard } from "@/components/card/ecommerce-cards/product-grid-card"
-import { ProductListCard } from "@/components/card/ecommerce-cards/product-list-card"
-import { CartItemCard } from "@/components/card/ecommerce-cards/cart-item-card"
-import { OrderSummaryCard } from "@/components/card/ecommerce-cards/order-summary-card"
-import { PromotionCard } from "@/components/card/ecommerce-cards/promotion-card"
-import { CategoryCard } from "@/components/card/ecommerce-cards/category-card"
-import { ReviewCard } from "@/components/card/ecommerce-cards/review-card"
-import { ShippingOptionCard } from "@/components/card/ecommerce-cards/shipping-option-card"
-
-// Import the new composite card
-import { AILearningCard } from "@/components/card/composite-cards/ai-learning-card"
-
-interface CardComponentsClientViewProps {
-dict: {
-  title: string
-  appCard: string
-  appCardDescription: string
-  chartCard: string
-  chartCardDescription: string
-  cardTabs: string[]
-  // New composite card dictionary
-  compositeCardAILearning: string
-  compositeCardAILearningDescription: string
-  ecommerceCardComingSoon: string
-  imageCardFullBleed: string
-  imageCardFullBleedDescription: string
-  imageCardWithBorder: string
-  imageCardWithBorderDescription: string
-  imageCardWithOverlayTitle: string
-  imageCardWithOverlayTitleDescription: string
-  overlayTitle: string
-  imageCardWithTitleBelow: string
-  imageCardWithTitleBelowDescription: string
-  cardTitle: string
-  cardSubtitle: string
-  imageCardWithButton: string
-  imageCardWithButtonDescription: string
-  cardButtonText: string
-  imageCardLeftContentRight: string
-  imageCardLeftContentRightDescription: string
-  leftContentRightTitle: string
-  leftContentRightSubtitle: string
-  tagCard: string
-  tagCardDescription: string
-  tagCardTitle: string
-  tags: string[]
-  // Education Card Dictionary
-  educationCardCourseOverview: string
-  educationCardCourseOverviewDescription: string
-  courseOverviewTitle: string
-  courseOverviewInstructor: string
-  courseOverviewButton: string
-  educationCardLessonProgress: string
-  educationCardLessonProgressDescription: string
-  lessonProgressTitle: string
-  lessonProgressLesson: string
-  lessonProgressButton: string
-  educationCardInstructorProfile: string
-  educationCardInstructorProfileDescription: string
-  instructorProfileName: string
-  instructorProfileBio: string
-  instructorProfileButton: string
-  educationCardCertificate: string
-  educationCardCertificateDescription: string
-  certificateCourseName: string
-  certificateUserName: string
-  certificateButton: string
-  educationCardUpcomingLive: string
-  educationCardUpcomingLiveDescription: string
-  upcomingLiveTitle: string
-  upcomingLiveInstructor: string
-  upcomingLiveButton: string
-  // New Course Outline Dictionary
-  courseOutline: string
-  courseOutlineDescription: string
-  courseOutlineTitle: string
-  courseOutlineSection: {
-    title: string
-    type: string
-    totalHours: string
-    modules: {
-      title: string
-      lessons: {
-        id: number
-        title: string
-        duration: string
-      }[]
-    }[]
-  }
-  // E-commerce Dictionary
-  ecommerceProductGrid: string
-  ecommerceProductGridDescription: string
-  ecommerceProductList: string
-  ecommerceProductListDescription: string
-  ecommerceCartItem: string
-  ecommerceCartItemDescription: string
-  ecommerceOrderSummary: string
-  ecommerceOrderSummaryDescription: string
-  ecommercePromotion: string
-  ecommercePromotionDescription: string
-  productName: string
-  productDescription: string
-  productPrice: string
-  productAttributes: string
-  addToCart: string
-  orderSummaryTitle: string
-  subtotal: string
-  shipping: string
-  tax: string
-  total: string
-  checkout: string
-  promoTitle: string
-  promoSubtitle: string
-  promoButton: string
-  ecommerceCategory: string
-  ecommerceCategoryDescription: string
-  ecommerceReview: string
-  ecommerceReviewDescription: string
-  ecommerceShipping: string
-  ecommerceShippingDescription: string
-  categoryElectronics: string
-  categoryFashion: string
-  reviewUserName: string
-  reviewVerified: string
-  reviewContent: string
-  shippingStandard: string
-  shippingStandardEta: string
-  shippingExpress: string
-  shippingExpressEta: string
-}
+interface ClientViewProps {
+  dict: any
 }
 
-export function CardComponentsClientView({ dict }: CardComponentsClientViewProps) {
-const [activeTab, setActiveTab] = useState(dict.cardTabs[0])
-const [selectedShipping, setSelectedShipping] = useState('standard')
-
-const kpiChartData = [
-  { value: 10 }, { value: 50 }, { value: 30 }, { value: 80 }, { value: 60 }, { value: 100 },
+// Mock data and explanations, now living in the client view
+const defaultCourseSections = [
+  {
+    title: "基础课程",
+    type: "online",
+    lessons: [
+      { id: 1, title: "AI基础概念介绍", duration: "40分钟", type: "online" },
+      { id: 2, title: "AI发展历程回顾", duration: "45分钟", type: "online" },
+    ],
+  },
+  {
+    title: "应用课程",
+    type: "offline",
+    lessons: [
+      { id: 5, title: "提示词设计与优化", duration: "90分钟", type: "offline" },
+      { id: 6, title: "场景应用实践", duration: "120分钟", type: "offline" },
+    ],
+  },
 ]
 
-return (
-  <main className="px-4">
-    <div className="w-full mb-8">
-      <Tabs tabs={dict.cardTabs} activeTab={activeTab} onTabChange={setActiveTab} />
-    </div>
+const defaultBooks = [
+  {
+    title: "《人工智能：一种现代方法》",
+    author: "Stuart Russell & Peter Norvig 著",
+    tags: [{ text: "经典教材" }],
+    readingTime: "约30小时阅读",
+  },
+  { title: "《机器学习》", author: "周志华 著", tags: [{ text: "中文经典" }], readingTime: "约25小时阅读" },
+]
 
-    {activeTab === dict.cardTabs[0] && (
-      <div className="space-y-12 animate-in fade-in duration-500">
-        {/* Existing Cards */}
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.appCard}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.appCardDescription}</p>
-          <AppCard className="p-8">
-            <h4 className="font-bold" style={{ color: "var(--card-title-color)" }}>
-              App Card Title
-            </h4>
-            <p className="mt-2" style={{ color: "var(--card-text-color)" }}>
-              This is an example of a standard AppCard. It's great for displaying mixed content.
-            </p>
-          </AppCard>
-        </section>
+const defaultPapers = [
+  {
+    title: "Attention Is All You Need",
+    description: "Transformer架构奠基论文",
+    badge: (
+      <span className="text-xs bg-red-50 border border-red-200 text-red-700 rounded-md px-1.5 py-0.5">里程碑</span>
+    ),
+    year: "2017年发表",
+  },
+  {
+    title: "Deep Residual Learning for Image Recognition",
+    description: "ResNet网络结构论文",
+    badge: (
+      <span className="text-xs bg-orange-50 border border-orange-200 text-orange-700 rounded-md px-1.5 py-0.5">
+        计算机视觉
+      </span>
+    ),
+    year: "2015年发表",
+  },
+]
 
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.chartCard}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.chartCardDescription}</p>
-          <div className="h-80">
-            <ChartCard>
-              <SimpleLineChart title="Data inside a ChartCard" />
-            </ChartCard>
+const defaultIndividualCourses = [
+  {
+    title: "CS229: Machine Learning",
+    provider: "Stanford University - Andrew Ng",
+    badge: (
+      <span className="text-xs bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-1.5 py-0.5">斯坦福</span>
+    ),
+    duration: "20讲 约40小时",
+  },
+  {
+    title: "Deep Learning Specialization",
+    provider: "Coursera - deeplearning.ai",
+    badge: (
+      <span className="text-xs bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-md px-1.5 py-0.5">
+        专项课程
+      </span>
+    ),
+    duration: "5门课程 约60小时",
+  },
+]
+
+const stepExplanations = {
+  step1:
+    "第一步很关键！我们先从AI基础概念开始，让你建立扎实的理论基础。这个阶段包括线上理论学习和线下实践操作，确保你能够理解AI的核心原理。",
+  step2:
+    "现在进入进阶阶段！在掌握基础知识后，我们开始学习更高级的AI应用技术，接触行业最前沿的技术和实践案例，提升你的专业技能水平。",
+  step3: "最后冲刺阶段！完成前两个阶段的学习后，我们将帮助你获得专业认证，并提供就业指导，确保你能够成功进入AI行业。",
+}
+
+const recommendationReason =
+  "我仔细分析了你的需求，考虑了你的背景、时间和目标。这个学习方案结合了理论基础和实践应用，让你能够循序渐进地掌握AI核心技术，同时，我会一直陪伴你学习，有问题随时问我！"
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="space-y-6">
+      <h2 className="text-2xl font-bold text-white/80 tracking-wider">{title}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">{children}</div>
+    </section>
+  )
+}
+
+function CardContainer({ children }: { children: React.ReactNode }) {
+  return <div className="w-full">{children}</div>
+}
+
+export default function ClientView({
+  locale,
+  dictionary,
+}: {
+  locale: Locale
+  dictionary: any
+}) {
+  const { theme, setTheme } = useCardTheme()
+  const { theme: chartTheme, setTheme: setChartTheme } = useDataChartTheme()
+
+  // State and animation logic is now managed here
+  const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set())
+  const [showFullPlan, setShowFullPlan] = useState(false)
+
+  const typedReason = useTypewriter(recommendationReason, 30)
+  const typedStep1Explanation = useTypewriter(expandedSteps.has("step1") ? stepExplanations.step1 : "", 30)
+  const typedStep2Explanation = useTypewriter(expandedSteps.has("step2") ? stepExplanations.step2 : "", 30)
+  const typedStep3Explanation = useTypewriter(expandedSteps.has("step3") ? stepExplanations.step3 : "", 30)
+
+  const toggleStep = (stepId: string) => {
+    const newExpanded = new Set(expandedSteps)
+    if (newExpanded.has(stepId)) {
+      newExpanded.delete(stepId)
+    } else {
+      newExpanded.add(stepId)
+    }
+    setExpandedSteps(newExpanded)
+  }
+
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+  const upcomingDate = new Date()
+  upcomingDate.setDate(upcomingDate.getDate() + 3)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const difference = +upcomingDate - +new Date()
+      setTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      })
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [upcomingDate])
+
+  const courseListGridData = {
+    courses: [
+      {
+        imageUrl: "/course-thumbnail-1.png",
+        title: "人工智能深度学习工程师",
+        instructorName: "李老师",
+        instructorAvatarUrl: "/instructor-avatar.png",
+        lessonCount: 48,
+        price: "¥ 2,499",
+        buttonText: "立即报名",
+      },
+      {
+        imageUrl: "/course-thumbnail-2.png",
+        title: "Web开发全栈",
+        instructorName: "张老师",
+        instructorAvatarUrl: "/instructor-avatar.png",
+        lessonCount: 60,
+        price: "¥ 3,199",
+        buttonText: "立即报名",
+      },
+    ],
+  }
+
+  const aiLearningCardProps = {
+    title: "Advanced AI for Modern Education",
+    description:
+      "Explore the frontiers of artificial intelligence and its applications in creating dynamic learning experiences.",
+    imageUrl: "/course-thumbnail-1.png",
+    tags: ["AI", "Machine Learning", "Education Tech"],
+    dict: dictionary.cardSdk.education.aiLearningCard,
+  }
+
+  return (
+    <DataChartThemeProvider>
+      <div className="p-8 space-y-12">
+        <header className="flex justify-between items-center">
+          <h1 className="text-4xl font-extrabold text-white tracking-tighter">{dictionary.cards.title}</h1>
+          <div className="flex items-center gap-4">
+            <LocalCardThemeEditor />
+            <CardThemePicker theme={theme} setTheme={setTheme} />
+            <ChartThemePicker theme={chartTheme} setTheme={setChartTheme} />
           </div>
-        </section>
+        </header>
 
-        {/* New Image Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.imageCardFullBleed}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.imageCardFullBleedDescription}</p>
-            <FullBleedImageCard />
-          </section>
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.imageCardWithBorder}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.imageCardWithBorderDescription}</p>
-            <BorderedImageCard />
-          </section>
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.imageCardWithOverlayTitle}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.imageCardWithOverlayTitleDescription}</p>
-            <OverlayTitleImageCard title={dict.overlayTitle} />
-          </section>
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.imageCardWithTitleBelow}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.imageCardWithTitleBelowDescription}</p>
-            <TitleBelowImageCard title={dict.cardTitle} subtitle={dict.cardSubtitle} />
-          </section>
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.imageCardWithButton}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.imageCardWithButtonDescription}</p>
-            <ButtonImageCard title={dict.cardTitle} subtitle={dict.cardSubtitle} buttonText={dict.cardButtonText} />
-          </section>
-          <section className="md:col-span-2">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.tagCard}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.tagCardDescription}</p>
-            <TagCard title={dict.tagCardTitle} tags={dict.tags} />
-          </section>
-        </div>
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.imageCardLeftContentRight}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.imageCardLeftContentRightDescription}</p>
-          <ImageLeftContentRightCard title={dict.leftContentRightTitle} subtitle={dict.leftContentRightSubtitle} />
-        </section>
-      </div>
-    )}
-
-    {activeTab === dict.cardTabs[1] && (
-      <div className="space-y-12 animate-in fade-in duration-500">
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.compositeCardAILearning}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.compositeCardAILearningDescription}</p>
-          <AILearningCard />
-        </section>
-      </div>
-    )}
-
-    {activeTab === dict.cardTabs[2] && (
-      <div className="animate-in fade-in duration-500">
-        <AppCard className="flex justify-center items-center p-16">
-          <p className="text-gray-500">Functional Cards Coming Soon...</p>
-        </AppCard>
-      </div>
-    )}
-
-    {activeTab === dict.cardTabs[3] && (
-      <div className="space-y-12 animate-in fade-in duration-500">
-        {/* New Business Cards */}
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">KPI 指标卡</h3>
-          <p className="text-sm text-gray-600 mb-4">用于在仪表盘中快速展示关键绩效指标及其趋势。</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <KpiMetricCard 
-              title="日活跃用户"
-              value="18,390"
-              change={5.2}
-              changePeriod="较昨日"
-              icon={<Users className="w-5 h-5" />}
-              chartData={kpiChartData}
-            />
-            <KpiMetricCard 
-              title="月收入"
-              value="¥128,430"
-              change={-1.8}
-              changePeriod="较上月"
-              icon={<TrendingUp className="w-5 h-5" />}
-              chartData={kpiChartData.slice().reverse()}
+        <Section title="Functional Cards">
+          <div className="col-span-full">
+            <AiLearningCard
+              {...aiLearningCardProps}
+              // Pass all state and handlers as props
+              expandedSteps={expandedSteps}
+              onStepToggle={toggleStep}
+              showFullPlan={showFullPlan}
+              onShowFullPlanToggle={() => setShowFullPlan(!showFullPlan)}
+              typedReason={typedReason}
+              typedStep1Explanation={typedStep1Explanation}
+              typedStep2Explanation={typedStep2Explanation}
+              typedStep3Explanation={typedStep3Explanation}
+              courseSections={defaultCourseSections}
+              books={defaultBooks}
+              papers={defaultPapers}
+              individualCourses={defaultIndividualCourses}
             />
           </div>
-        </section>
+        </Section>
 
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">产品展示卡</h3>
-          <p className="text-sm text-gray-600 mb-4">用于电子商务网站或产品列表，展示待售商品。</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <ProductDisplayCard
-              imageUrl="/product-headphone.png"
-              name="智能降噪耳机"
-              price="¥899"
-              rating={4.5}
-              tags={["新品", "热销"]}
-              buttonText="加入购物车"
+        <Section title="Content Cards">
+          <CardContainer>
+            <FullBleedImageCard imageUrl="/abstract-landscape.png" altText="Abstract landscape" />
+          </CardContainer>
+          <CardContainer>
+            <OverlayTitleImageCard
+              imageUrl="/majestic-mountain-vista.png"
+              altText="Mountain scenery"
+              title="探索未知"
             />
-          </div>
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">团队成员卡</h3>
-          <p className="text-sm text-gray-600 mb-4">用于"关于我们"页面或项目管理工具中介绍团队成员。</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <TeamMemberCard
-              avatarUrl="/team-member-1.png"
-              name="林静"
-              role="首席设计师"
-              isOnline={true}
-              bio="专注于创造直观且引人入胜的用户体验，拥有超过8年的设计经验。"
-              socials={[
-                { icon: <Twitter className="w-4 h-4" />, href: "#" },
-                { icon: <Linkedin className="w-4 h-4" />, href: "#" },
+          </CardContainer>
+          <CardContainer>
+            <TitleBelowImageCard
+              imageUrl="/forest-trail.png"
+              altText="Forest trail"
+              title="林间小径"
+              subtitle="大自然的静谧邀请"
+            />
+          </CardContainer>
+          <CardContainer>
+            <ButtonImageCard
+              imageUrl="/serene-lake.png"
+              altText="Serene lake"
+              title="静谧湖泊"
+              subtitle="享受片刻的宁静"
+              buttonText="即刻预订"
+            />
+          </CardContainer>
+          <CardContainer>
+            <BorderedImageCard imageUrl="/modern-architecture-cityscape.png" altText="Modern architecture" />
+          </CardContainer>
+          <CardContainer>
+            <ImageLeftContentRightCard
+              imageUrl="/futuristic-city-street.png"
+              altText="Futuristic city street"
+              title="未来都市"
+              subtitle="科技与生活的完美融合"
+            />
+          </CardContainer>
+          <div className="col-span-full">
+            <TagCard
+              tags={[
+                { id: "1", name: "人工智能" },
+                { id: "2", name: "机器学习" },
+                { id: "3", name: "深度学习" },
               ]}
             />
-            <TeamMemberCard
-              avatarUrl="/team-member-2.png"
-              name="陈伟"
-              role="高级工程师"
-              isOnline={false}
-              bio="热衷于构建可扩展、高性能的后端系统，精通多种编程语言。"
-              socials={[
-                { icon: <Github className="w-4 h-4" />, href: "#" },
-                { icon: <Linkedin className="w-4 h-4" />, href: "#" },
-              ]}
-            />
           </div>
-        </section>
+        </Section>
 
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">订单状态卡</h3>
-          <p className="text-sm text-gray-600 mb-4">在用户中心显示最近订单的状态和进度。</p>
-          <OrderStatusCard
-            orderId="2025080612345"
-            orderDate="2025-08-06"
-            status="运输中"
-            currentStep={3}
-            steps={["已下单", "已打包", "已发货", "已送达"]}
-            productImages={["/order-item-1.png", "/order-item-2.png"]}
-            totalPrice="¥1,298.00"
-          />
-        </section>
-
-        {/* Existing Business Cards */}
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">AI训练师职位卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示职位信息、薪资数据和经验要求分布的业务卡片</p>
-          <AITrainerJobCard />
-        </section>
-        
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">工作城市排名卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示不同城市的职位数量、平均薪资和竞争力指标</p>
-          <CityRankingCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">薪资对比分析卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示不同学历背景下AI训练师的薪资区间对比</p>
-          <SalaryComparisonCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">企业招聘排行卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示新职业招聘企业的排名和在招职位数量</p>
-          <CompanyRankingCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">核心技能掌握卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示个人或团队在不同技能领域的掌握程度</p>
-          <SkillsMasteryCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">特色待遇卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示职位提供的各种福利待遇和特色服务</p>
-          <SpecialBenefitsCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">AI产品经理职位卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示职位的基本信息包括薪资、地点、学历和经验要求</p>
-          <AIProductManagerCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">学历及专业背景卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示职位的学历要求和相关专业背景信息</p>
-          <EducationBackgroundCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">项目经验卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">展示个人或团队的项目经验，包括进度、角色和技术栈</p>
-          <ProjectExperienceCard />
-        </section>
-      </div>
-    )}
-
-    {activeTab === dict.cardTabs[4] && (
-      <div className="space-y-12 animate-in fade-in duration-500">
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">AI教育计划推荐卡片</h3>
-          <p className="text-sm text-gray-600 mb-4">智能化的学习计划推荐，提供个性化的AI对话式学习指导和分步骤规划</p>
-          <AIEducationPlanCard />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.educationCardCourseOverview}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.educationCardCourseOverviewDescription}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Section title="Education Cards">
+          <CardContainer>
             <CourseOverviewCard
               imageUrl="/course-thumbnail-1.png"
-              title={dict.courseOverviewTitle}
-              instructorName={dict.courseOverviewInstructor}
-              instructorAvatarUrl="/team-member-1.png"
-              lessonCount={24}
-              price="¥299"
-              buttonText={dict.courseOverviewButton}
+              title="人工智能深度学习工程师"
+              instructorName="李老师"
+              instructorAvatarUrl="/instructor-avatar.png"
+              lessonCount={48}
+              price="¥ 2,499"
+              buttonText="立即报名"
             />
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.educationCardLessonProgress}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.educationCardLessonProgressDescription}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </CardContainer>
+          <CardContainer>
             <LessonProgressCard
-              icon={<BrainCircuit className="w-6 h-6" />}
-              courseTitle={dict.lessonProgressTitle}
-              currentLesson={dict.lessonProgressLesson}
-              progress={65}
-              buttonText={dict.lessonProgressButton}
+              icon={<BrainCircuit />}
+              courseTitle="机器学习实战"
+              currentLesson="第5章：支持向量机"
+              progress={68}
+              buttonText="继续学习"
             />
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.educationCardInstructorProfile}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.educationCardInstructorProfileDescription}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </CardContainer>
+          <CardContainer>
             <InstructorProfileCard
               avatarUrl="/instructor-avatar.png"
-              name={dict.instructorProfileName}
-              bio={dict.instructorProfileBio}
+              name="王教授"
+              bio="专注于人工智能领域研究与教学十年，致力于培养下一代AI人才。"
               courseCount={12}
               studentCount={8500}
-              buttonText={dict.instructorProfileButton}
+              buttonText="关注讲师"
             />
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.educationCardCertificate}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.educationCardCertificateDescription}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </CardContainer>
+          <CardContainer>
             <CertificateCard
-              courseName={dict.certificateCourseName}
-              userName={dict.certificateUserName}
-              completionDate="2025-07-15"
-              certificateId="IP-202507-1A2B3C"
-              buttonText={dict.certificateButton}
+              courseName="Python数据分析与可视化"
+              userName="张三"
+              completionDate="2023年10月26日"
+              certificateId="CERT-20231026-8B3D"
+              buttonText="查看证书"
             />
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.educationCardUpcomingLive}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.educationCardUpcomingLiveDescription}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </CardContainer>
+          <CardContainer>
             <UpcomingLiveSessionCard
-              title={dict.upcomingLiveTitle}
-              instructorName={dict.upcomingLiveInstructor}
-              startTime={new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000)}
-              buttonText={dict.upcomingLiveButton}
+              title="直播：大语言模型前沿技术"
+              instructorName="赵博士"
+              startTime={upcomingDate}
+              buttonText="预约直播"
+              timeLeft={timeLeft}
+            />
+          </CardContainer>
+          <CardContainer>
+            <CourseListSimple
+              title="课程章节"
+              lessons={[
+                { title: "1. 欢迎来到课程", duration: "05:30", isCompleted: true },
+                { title: "2. 机器学习简介", duration: "15:00", isCompleted: true },
+              ]}
+            />
+          </CardContainer>
+          <div className="col-span-full">
+            <CourseDisplay variant="grid" {...courseListGridData} />
+          </div>
+        </Section>
+
+        <Section title="Education List/Grid Cards">
+          <div className="col-span-full grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CourseListDetailed
+              courses={[
+                {
+                  imageUrl: "/course-thumbnail-2.png",
+                  title: "深度学习入门到实践",
+                  description: "基于PyTorch，从零开始构建神经网络，并应用于图像识别、自然语言处理等多个实战项目。",
+                  instructorName: "刘老师",
+                  instructorAvatarUrl: "/instructor-avatar.png",
+                  buttonText: "查看详情",
+                },
+                {
+                  imageUrl: "/course-thumbnail-3.png",
+                  title: "强化学习探索",
+                  description: "探索强化学习的核心概念，包括Q-learning, SARSA, 和深度Q网络(DQN)，并解决经典控制问题。",
+                  instructorName: "孙老师",
+                  instructorAvatarUrl: "/instructor-avatar.png",
+                  buttonText: "查看详情",
+                },
+              ]}
             />
           </div>
-        </section>
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.courseOutline}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.courseOutlineDescription}</p>
-          <CourseOutline
-            title={dict.courseOutlineTitle}
-            section={dict.courseOutlineSection}
-          />
-        </section>
-      </div>
-    )}
-
-    {activeTab === dict.cardTabs[5] && (
-      <div className="space-y-12 animate-in fade-in duration-500">
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommercePromotion}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.ecommercePromotionDescription}</p>
-          <PromotionCard
-            title={dict.promoTitle}
-            subtitle={dict.promoSubtitle}
-            buttonText={dict.promoButton}
-            imageUrl="/product-drone.png"
-            endDate={new Date(new Date().getTime() + 2 * 60 * 60 * 1000)}
-          />
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceCategory}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.ecommerceCategoryDescription}</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <CategoryCard imageUrl="/category-electronics.png" name={dict.categoryElectronics} />
-            <CategoryCard imageUrl="/category-fashion.png" name={dict.categoryFashion} />
+          <div className="col-span-full">
+            <CourseOutline
+              title="课程大纲"
+              section={{
+                title: "第一部分：机器学习基础",
+                type: "理论与实践",
+                totalHours: "约20小时",
+                modules: [
+                  {
+                    title: "模块一：环境搭建与基础",
+                    lessons: [
+                      { id: 1, title: "课程介绍", duration: "15:00" },
+                      { id: 2, title: "安装Python和Jupyter", duration: "30:00" },
+                    ],
+                  },
+                  {
+                    title: "模块二：核心算法",
+                    lessons: [
+                      { id: 3, title: "线性回归", duration: "01:30:00" },
+                      { id: 4, title: "逻辑回归", duration: "01:45:00" },
+                    ],
+                  },
+                ],
+              }}
+            />
           </div>
-        </section>
+        </Section>
 
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceProductGrid}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.ecommerceProductGridDescription}</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <Section title="E-commerce Cards">
+          <CardContainer>
             <ProductGridCard
               imageUrl="/product-watch.png"
-              name={dict.productName}
-              price={dict.productPrice}
-              rating={4.8}
+              title="智能运动手表"
+              price="¥ 899"
+              rating={4.5}
+              reviewCount={120}
             />
-            <ProductGridCard
-              imageUrl="/product-vr-headset.png"
-              name="VR Headset"
-              price="¥2,999"
-              rating={4.9}
-            />
-            <ProductGridCard
-              imageUrl="/product-smart-speaker.png"
-              name="Smart Speaker"
-              price="¥499"
-              rating={4.7}
-            />
-             <ProductGridCard
+          </CardContainer>
+          <CardContainer>
+            <ProductListCard
               imageUrl="/product-drone.png"
-              name="Autonomous Drone"
-              price="¥4,599"
-              rating={4.9}
+              title="高清航拍无人机"
+              price="¥ 3,499"
+              description="4K高清摄像头，30分钟续航，智能跟随模式。"
+              rating={4.8}
+              reviewCount={85}
             />
-          </div>
-        </section>
-
-        <section>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceProductList}</h3>
-          <p className="text-sm text-gray-600 mb-4">{dict.ecommerceProductListDescription}</p>
-          <ProductListCard
-            imageUrl="/product-drone.png"
-            name="Autonomous Drone"
-            description="A high-performance drone with AI-powered flight control and 4K camera."
-            price="¥4,599"
-            buttonText={dict.addToCart}
-          />
-        </section>
-
-        <div className="grid md:grid-cols-2 gap-x-6 gap-y-12">
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceCartItem}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.ecommerceCartItemDescription}</p>
-            <div className="space-y-4">
-              <CartItemCard
-                imageUrl="/product-watch.png"
-                name={dict.productName}
-                attributes={dict.productAttributes}
-                price={dict.productPrice}
-              />
-              <CartItemCard
-                imageUrl="/product-smart-speaker.png"
-                name="Smart Speaker"
-                attributes="Color: Space Gray"
-                price="¥499"
-              />
-            </div>
-          </section>
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceOrderSummary}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.ecommerceOrderSummaryDescription}</p>
-            <OrderSummaryCard
-              title={dict.orderSummaryTitle}
-              subtotal={2498}
-              shipping={0}
-              tax={150.35}
-              totalLabel={dict.total}
-              buttonText={dict.checkout}
+          </CardContainer>
+          <CardContainer>
+            <CartItemCard imageUrl="/product-vr-headset.png" title="沉浸式VR眼镜" price="¥ 1,999" quantity={1} />
+          </CardContainer>
+          <CardContainer>
+            <OrderSummaryCard subtotal={2898} shipping={0} tax={134.5} total={3032.5} buttonText="前往支付" />
+          </CardContainer>
+          <CardContainer>
+            <PromotionCard
+              title="双十一狂欢"
+              description="全场商品享8折优惠，限时抢购！"
+              promoCode="DOUBLE11"
+              buttonText="复制优惠码"
             />
-          </section>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-x-6 gap-y-12">
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceReview}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.ecommerceReviewDescription}</p>
+          </CardContainer>
+          <CardContainer>
+            <CategoryCard imageUrl="/category-electronics.png" categoryName="数码产品" />
+          </CardContainer>
+          <CardContainer>
             <ReviewCard
               avatarUrl="/user-review-avatar.png"
-              userName={dict.reviewUserName}
-              isVerified={true}
+              userName="科技爱好者"
               rating={5}
-              content={dict.reviewContent}
-              date="2025-08-05"
+              reviewText="这款无人机太棒了！操作简单，画质清晰，续航也很给力，非常满意的一次购物体验。"
+              date="2023-10-20"
             />
-          </section>
-          <section>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.ecommerceShipping}</h3>
-            <p className="text-sm text-gray-600 mb-4">{dict.ecommerceShippingDescription}</p>
-            <div className="space-y-3">
-              <ShippingOptionCard
-                name={dict.shippingStandard}
-                eta={dict.shippingStandardEta}
-                price="Free"
-                selected={selectedShipping === 'standard'}
-                onSelect={() => setSelectedShipping('standard')}
-              />
-              <ShippingOptionCard
-                name={dict.shippingExpress}
-                eta={dict.shippingExpressEta}
-                price="¥25.00"
-                selected={selectedShipping === 'express'}
-                onSelect={() => setSelectedShipping('express')}
-              />
-            </div>
-          </section>
-        </div>
-      </div>
-    )}
+          </CardContainer>
+          <CardContainer>
+            <ShippingOptionCard methodName="顺丰速运" deliveryTime="预计1-2天送达" price={0} isSelected={true} />
+          </CardContainer>
+        </Section>
 
-    {activeTab === dict.cardTabs[6] && (
-      <div className="animate-in fade-in duration-500">
-        <AppCard className="flex justify-center items-center p-16">
-          <p className="text-gray-500">Content Cards Coming Soon...</p>
-        </AppCard>
+        <Section title="Base Card Example">
+          <CardContainer>
+            <BaseCard>
+              <p>{dictionary.cards.baseCardExample}</p>
+            </BaseCard>
+          </CardContainer>
+        </Section>
       </div>
-    )}
-  </main>
-)
+    </DataChartThemeProvider>
+  )
 }

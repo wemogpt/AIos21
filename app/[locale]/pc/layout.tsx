@@ -1,17 +1,13 @@
 import type React from "react"
-import { getDictionary, type Locale } from "@/lib/dictionaries"
-import { ThemeProvider } from "@/components/providers/theme-provider"
-import { CardThemeProvider } from "@/components/providers/card-theme-provider"
-import { DataChartThemeProvider } from "@/components/providers/data-chart-theme-provider"
-import { ChartThemeProvider } from "@/components/providers/chart-theme-provider"
-import { FrostedEffectProvider } from "@/components/providers/frosted-effect-provider"
-import { PCDynamicBackground } from "@/components/theme/pc-dynamic-background"
-import { PCLeftSidebar } from "@/components/navigation/pc-left-sidebar"
-import { PCTopHeader } from "@/components/navigation/pc-top-header"
+import { PcLeftSidebar } from "@/components/navigation/pc-left-sidebar"
+import { PcTopHeader } from "@/components/navigation/pc-top-header"
+import { PcDynamicBackground } from "@/components/theme/pc-dynamic-background"
+import { getDictionary } from "@/lib/dictionaries"
+import type { Locale } from "@/packages/core-config/src/i18n/i18n.config"
 
-export default async function PCLayout({
+export default async function PcLayout({
   children,
-  params: { locale }
+  params: { locale },
 }: {
   children: React.ReactNode
   params: { locale: Locale }
@@ -19,34 +15,15 @@ export default async function PCLayout({
   const dict = await getDictionary(locale)
 
   return (
-    <ThemeProvider>
-      <DataChartThemeProvider>
-        <CardThemeProvider>
-          <ChartThemeProvider>
-            <FrostedEffectProvider>
-              <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-                <PCDynamicBackground />
-                
-                {/* Left Sidebar */}
-                <PCLeftSidebar dict={dict} locale={locale} />
-                
-                {/* Main Content Area */}
-                <div className="pl-20 transition-all duration-300">
-                  {/* Top Header */}
-                  <PCTopHeader dict={dict} locale={locale} />
-                  
-                  {/* Page Content */}
-                  <main className="relative z-10 p-6 pt-20">
-                    <div className="max-w-7xl mx-auto">
-                      {children}
-                    </div>
-                  </main>
-                </div>
-              </div>
-            </FrostedEffectProvider>
-          </ChartThemeProvider>
-        </CardThemeProvider>
-      </DataChartThemeProvider>
-    </ThemeProvider>
+    <div className="flex h-screen w-full flex-col bg-white dark:bg-gray-950">
+      <PcTopHeader />
+      <div className="flex flex-1 overflow-hidden">
+        <PcLeftSidebar dictionary={dict.pc.sidebar} />
+        <main className="relative flex-1 overflow-y-auto">
+          <PcDynamicBackground />
+          <div className="relative z-10 p-6">{children}</div>
+        </main>
+      </div>
+    </div>
   )
 }

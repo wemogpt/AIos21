@@ -1,0 +1,11 @@
+{
+  "bottomNav": {
+    "home": "Home",
+    "components": "Components",
+    "chat": "Chat",
+    "profile": "Profile"
+  },
+  "page": {
+    "title": "Welcome to iPollo"
+  }
+}

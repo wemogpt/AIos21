@@ -3,7 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useState, useMemo, useCallback, type ReactNode } from "react"
 import type { ColorConfig, PresetConfig } from "@/types"
-import { initialColors } from "@/config/theme"
+import { initialColors } from "@/packages/core-config/src"
 
 interface ThemeContextType {
   colors: ColorConfig[]
@@ -12,6 +12,9 @@ interface ThemeContextType {
   applyPreset: (preset: PresetConfig["colors"]) => void
   gradientStyle: React.CSSProperties
   getGlowColor: (index: number) => string
+  primaryColor: string
+  secondaryColor: string
+  accentColor: string
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
@@ -36,6 +39,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       { id: 3, name: "点缀色", value: preset[2], enabled: true },
     ])
   }, [])
+
+  const primaryColor = useMemo(() => {
+    const color = colors.find((c) => c.id === 1 && c.enabled)
+    return color ? color.value : initialColors[0].value
+  }, [colors])
+
+  const secondaryColor = useMemo(() => {
+    const color = colors.find((c) => c.id === 2 && c.enabled)
+    return color ? color.value : initialColors[1].value
+  }, [colors])
+
+  const accentColor = useMemo(() => {
+    const color = colors.find((c) => c.id === 3 && c.enabled)
+    return color ? color.value : initialColors[2].value
+  }, [colors])
 
   const gradientStyle = useMemo(() => {
     const enabledColors = colors.filter((c) => c.enabled)
@@ -76,14 +94,27 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       applyPreset,
       gradientStyle,
       getGlowColor,
+      primaryColor,
+      secondaryColor,
+      accentColor,
     }),
-    [colors, updateColor, toggleColor, applyPreset, gradientStyle, getGlowColor],
+    [
+      colors,
+      updateColor,
+      toggleColor,
+      applyPreset,
+      gradientStyle,
+      getGlowColor,
+      primaryColor,
+      secondaryColor,
+      accentColor,
+    ],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
-export function useTheme() {
+export function useTheme(): ThemeContextType {
   const context = useContext(ThemeContext)
   if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider")

@@ -1,24 +1,36 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { i18n } from "@ipollo/core-config"
+import { match as matchLocale } from "@formatjs/intl-localematcher"
+import Negotiator from "negotiator"
 
-const locales = ["zh", "en"]
-const defaultLocale = "zh"
+function getLocale(request: NextRequest): string {
+  const negotiatorHeaders: Record<string, string> = {}
+  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value))
+
+  const locales: string[] = [...i18n.locales]
+  const languages = new Negotiator({ headers: negotiatorHeaders }).languages()
+  const defaultLocale = i18n.defaultLocale
+
+  try {
+    return matchLocale(languages, locales, defaultLocale)
+  } catch (e) {
+    return defaultLocale
+  }
+}
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`)
+  const pathname = request.nextUrl.pathname
+  const pathnameIsMissingLocale = i18n.locales.every(
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+  )
 
-  if (pathnameHasLocale) return
-
-  // 如果 URL 中没有语言环境，则重定向到默认语言
-  const locale = defaultLocale
-  request.nextUrl.pathname = `/${locale}${pathname}`
-  return NextResponse.redirect(request.nextUrl)
+  if (pathnameIsMissingLocale) {
+    const locale = getLocale(request)
+    return NextResponse.redirect(new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, request.url))
+  }
 }
 
 export const config = {
-  matcher: [
-    // 跳过所有内部路径 (_next) 和静态文件
-    "/((?!_next|api|favicon.ico|generic-user-avatar.png).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }

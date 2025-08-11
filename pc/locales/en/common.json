@@ -1,0 +1,11 @@
+{
+  "sidebar": {
+    "overview": "Components Overview",
+    "basic": "Basic",
+    "navigation": "Navigation",
+    "input": "Input",
+    "dataDisplay": "Data Display",
+    "card": "Card",
+    "feedback": "Feedback"
+  }
+}

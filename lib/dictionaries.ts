@@ -1,13 +1,12 @@
 import "server-only"
+import type { Locale } from "@ipollo/core-config"
 
 const dictionaries = {
-  en: () => import("./dictionaries/en.json").then(module => module.default),
-  zh: () => import("./dictionaries/zh.json").then(module => module.default),
+  en: () => import("@/lib/dictionaries/en.json").then((module) => module.default),
+  zh: () => import("@/lib/dictionaries/zh.json").then((module) => module.default),
 }
 
-export type Locale = keyof typeof dictionaries
-
 export const getDictionary = async (locale: Locale) => {
-  const load = dictionaries[locale] || dictionaries.zh
-  return load()
+  const loader = dictionaries[locale] || dictionaries.en
+  return loader()
 }

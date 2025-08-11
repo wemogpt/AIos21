@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Palette } from 'lucide-react'
+import { Palette } from "lucide-react"
 import { useTheme } from "@/components/providers/theme-provider"
-import { presets } from "@/config/theme"
+import { presets } from "@/packages/core-config/src"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"

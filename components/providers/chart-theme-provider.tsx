@@ -1,6 +1,6 @@
 "use client"
 import { createContext, useContext, useState, useMemo, type ReactNode } from "react"
-import { chartPalettes } from "@/config/chart-theme"
+import { chartPalettes } from "@/packages/core-config/src"
 
 interface ChartThemeContextType {
   palette: string[]

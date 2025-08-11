@@ -1,0 +1,11 @@
+{
+  "bottomNav": {
+    "home": "首页",
+    "components": "组件",
+    "chat": "聊天",
+    "profile": "我的"
+  },
+  "page": {
+    "title": "欢迎来到 iPollo"
+  }
+}

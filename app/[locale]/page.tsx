@@ -1,8 +1,9 @@
-import { LayoutGrid, Grid3x3, List, ImageIcon, RectangleHorizontal, MessageSquare, Monitor } from 'lucide-react'
+import { LayoutGrid, Grid3x3, List, ImageIcon, RectangleHorizontal, MessageSquare, Monitor } from "lucide-react"
 import { BrowserHeader } from "@/components/layout/browser-header"
 import { CategoryCard } from "@/components/browser/category-card"
 import Link from "next/link"
-import { getDictionary, type Locale } from "@/lib/dictionaries"
+import { getDictionary } from "@/lib/dictionaries"
+import type { Locale } from "@/config/i18n.config"
 import { Button } from "@/components/ui/button"
 
 export default async function ComponentsBrowserPage({ params: { locale } }: { params: { locale: Locale } }) {
@@ -21,7 +22,7 @@ export default async function ComponentsBrowserPage({ params: { locale } }: { pa
   return (
     <div className="min-h-screen pb-32">
       <BrowserHeader title={dict.browserHeader.title} />
-      
+
       {/* PC版本入口 */}
       <div className="px-4 pt-4">
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 mb-6 border border-blue-100">
@@ -36,9 +37,7 @@ export default async function ComponentsBrowserPage({ params: { locale } }: { pa
               </div>
             </div>
             <Button size="sm" asChild>
-              <Link href={`/${locale}/pc`}>
-                访问PC版
-              </Link>
+              <Link href={`/${locale}/pc`}>访问PC版</Link>
             </Button>
           </div>
         </div>
