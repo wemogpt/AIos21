@@ -1,4 +1,4 @@
-// This is the critical file that was missing.
+// This is the critical file that was missing or not found.
 // It defines the supported locales for the entire application.
 export const i18n = {
   defaultLocale: "en",

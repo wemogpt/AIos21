@@ -23,8 +23,8 @@ export const dataChartPalettes = {
   ],
   default: ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE", "#00C49F"],
   vibrant: ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd", "#ff9f43"],
-  categorical: ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE", "#00C49F", "#FFBB28"],
-  sequential: ["#dff1f9", "#a8d8f0", "#72bfe6", "#3ca6dd", "#068ed4"],
+  categorical: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"],
+  sequential: ["#dof3ff", "#a1d9ff", "#72bfff", "#42a5f5", "#1976d2", "#004ba0"],
   diverging: ["#d73027", "#fc8d59", "#fee090", "#e0f3f8", "#91bfdb", "#4575b4"],
 }
 
