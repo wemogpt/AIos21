@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 这是最关键的一行。它告诉 Next.js 需要编译我们本地的包。
+  // This is the crucial part.
+  // It tells Next.js to also transpile the code from your local packages.
   transpilePackages: ["@ipollo/core-config", "@ipollo/card-sdk"],
   experimental: {
-    // 这有助于在 monorepo 结构中解决模块依赖问题。
+    // This can help with resolving modules in a monorepo-like setup.
     serverComponentsExternalPackages: ["@ipollo/core-config", "@ipollo/card-sdk"],
   },
   eslint: {

@@ -1,18 +1,20 @@
 export const chartTheme = {
-  grid: {
-    stroke: "#e2e8f0",
-  },
-  axis: {
-    ticks: {
-      fill: "#718096",
-    },
-    domain: {
-      stroke: "#cbd5e0",
+  light: {
+    backgroundColor: "transparent",
+    textColor: "#333",
+    gridColor: "#e0e0e0",
+    tooltip: {
+      backgroundColor: "#fff",
+      textColor: "#333",
     },
   },
-  tooltip: {
-    background: "#ffffff",
-    color: "#1a202c",
-    border: "#e2e8f0",
+  dark: {
+    backgroundColor: "transparent",
+    textColor: "#fff",
+    gridColor: "#444",
+    tooltip: {
+      backgroundColor: "#333",
+      textColor: "#fff",
+    },
   },
 }

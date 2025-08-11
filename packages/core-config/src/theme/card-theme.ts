@@ -1,32 +1,46 @@
-export type CardThemeConfig = {
-  backgroundColor: string
-  textColor: string
-  borderColor: string
-  borderRadius: string
-  boxShadow: string
-  fontFamily: string
-  fontSize: string
-  padding: string
-}
+import type { CardThemeConfig } from "@/types"
 
-export const defaultCardTheme: CardThemeConfig = {
-  backgroundColor: "#ffffff",
-  textColor: "#1a202c",
-  borderColor: "#e2e8f0",
-  borderRadius: "0.5rem",
-  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-  fontFamily: "inherit",
-  fontSize: "1rem",
-  padding: "1.5rem",
-}
-
-export const darkCardTheme: CardThemeConfig = {
-  backgroundColor: "#1a202c",
-  textColor: "#ffffff",
-  borderColor: "#4a5568",
-  borderRadius: "0.5rem",
-  boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-  fontFamily: "inherit",
-  fontSize: "1rem",
-  padding: "1.5rem",
+export const cardTheme: CardThemeConfig = {
+  light: {
+    backgroundColor: "#FFFFFF",
+    textColor: "#1F2937",
+    borderColor: "#E5E7EB",
+    highlightColor: "#3B82F6",
+    mutedColor: "#6B7280",
+  },
+  dark: {
+    backgroundColor: "#1F2937",
+    textColor: "#F9FAFB",
+    borderColor: "#374151",
+    highlightColor: "#60A5FA",
+    mutedColor: "#9CA3AF",
+  },
+  "rose-gold": {
+    backgroundColor: "#FFF1F2",
+    textColor: "#881337",
+    borderColor: "#FECDD3",
+    highlightColor: "#F43F5E",
+    mutedColor: "#BE123C",
+  },
+  "matcha-green": {
+    backgroundColor: "#F0FDF4",
+    textColor: "#14532D",
+    borderColor: "#BBF7D0",
+    highlightColor: "#22C55E",
+    mutedColor: "#166534",
+  },
+  "sky-blue": {
+    backgroundColor: "#F0F9FF",
+    textColor: "#075985",
+    borderColor: "#BAE6FD",
+    highlightColor: "#0EA5E9",
+    mutedColor: "#0C4A6E",
+  },
+  "lavender-purple": {
+    backgroundColor: "#F5F3FF",
+    textColor: "#5B21B6",
+    borderColor: "#DDD6FE",
+    highlightColor: "#8B5CF6",
+    mutedColor: "#6D28D9",
+  },
 }

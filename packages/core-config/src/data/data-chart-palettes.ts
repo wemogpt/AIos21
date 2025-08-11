@@ -23,9 +23,9 @@ export const dataChartPalettes = {
   ],
   default: ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE", "#00C49F"],
   vibrant: ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd", "#ff9f43"],
-  categorical: ["#3182ce", "#63b3ed", "#90cdf4", "#a0aec0", "#e2e8f0"],
-  sequential: ["#f7fafc", "#edf2f7", "#e2e8f0", "#cbd5e0", "#a0aec0"],
-  diverging: ["#d73027", "#fc8d59", "#fee090", "#e0f3f8", "#91bfdb", "#4575b4"],
+  categorical: ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"],
+  sequential: ["#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"],
+  diverging: ["#B2182B", "#D6604D", "#F4A582", "#FDDBC7", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC"],
 }
 
 export type DataChartPalette =
