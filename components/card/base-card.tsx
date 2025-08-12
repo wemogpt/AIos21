@@ -1,55 +1,83 @@
 "use client"
 
 import type React from "react"
-import { Card, type CardProps } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-import { useLocalCardTheme } from "@/hooks/use-local-card-theme"
-import { LocalCardThemeEditor } from "@/components/theme/local-card-theme-editor"
+import { AppCard } from "@/components/layout/app-card"
+import { Settings } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
-// Optimal values for the "frosted glass" effect
-const FROSTED_OPACITY = 0.6
-const FROSTED_BLUR_PX = 20
-
-function hexToRgba(hex: string, alpha: number): string {
-  if (!hex.startsWith("#")) return hex
-  const r = Number.parseInt(hex.slice(1, 3), 16)
-  const g = Number.parseInt(hex.slice(3, 5), 16)
-  const b = Number.parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+export interface BaseCardProps {
+  children: React.ReactNode
+  className?: string
+  disableLocalTheme?: boolean
+  showSettings?: boolean
+  onSettingsClick?: () => void
+  // 拖拽相关属性
+  isDraggable?: boolean
+  dragHandleProps?: any
+  // 主题相关属性
+  theme?: "default" | "glass" | "minimal" | "vibrant"
+  // 数据和动作
+  data?: any
+  onAction?: (action: string, data?: any) => void
 }
 
-export function BaseCard({ className, children, ...props }: CardProps) {
-  const { localTheme, updateLocalTheme, resetToGlobal } = useLocalCardTheme()
-
-  const isFrosted = localTheme.backgroundStyle === "frosted"
-  const isSolid = localTheme.backgroundStyle === "solid"
-  const isNone = localTheme.backgroundStyle === "none"
-
-  const cardStyle: React.CSSProperties = {
-    // @ts-ignore
-    "--card-title-color": localTheme.titleColor,
-    "--card-text-color": localTheme.textColor,
-    fontFamily: localTheme.fontFamily,
-    backgroundColor: isNone ? "transparent" : hexToRgba(localTheme.background, isFrosted ? FROSTED_OPACITY : 1),
-    backdropFilter: isFrosted ? `blur(${FROSTED_BLUR_PX}px)` : "none",
+/**
+ * 统一的卡片基础组件
+ * 集成了所有卡片必需的功能：
+ * - 主题配置能力
+ * - 设置入口
+ * - 拖拽支持
+ * - 统一的样式约束
+ */
+export function BaseCard({
+  children,
+  className = "",
+  disableLocalTheme = false,
+  showSettings = true,
+  onSettingsClick,
+  isDraggable = false,
+  dragHandleProps,
+  theme = "default",
+  data,
+  onAction,
+  ...props
+}: BaseCardProps) {
+  const handleSettingsClick = () => {
+    if (onSettingsClick) {
+      onSettingsClick()
+    } else if (onAction) {
+      onAction("settings", data)
+    }
   }
 
   return (
-    <Card
-      style={cardStyle}
-      className={cn(
-        "relative group transition-all duration-300",
-        {
-          "border border-white/20 shadow-[0_12px_48px_0_rgba(31,38,135,0.12)]": isFrosted,
-          "border shadow-2xl": isSolid,
-          "border-none shadow-none": isNone,
-        },
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <LocalCardThemeEditor theme={localTheme} setTheme={updateLocalTheme} resetToGlobal={resetToGlobal} />
-    </Card>
+    <div className="relative group">
+      <AppCard
+        className={`
+          transition-all duration-200 ease-in-out
+          hover:shadow-lg hover:scale-[1.02]
+          ${isDraggable ? "cursor-move" : ""}
+          ${className}
+        `}
+        disableLocalTheme={disableLocalTheme}
+        data-theme={theme}
+        {...dragHandleProps}
+        {...props}
+      >
+        {children}
+
+        {/* 统一的设置按钮 */}
+        {showSettings && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 h-8 w-8 p-0"
+            onClick={handleSettingsClick}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        )}
+      </AppCard>
+    </div>
   )
 }

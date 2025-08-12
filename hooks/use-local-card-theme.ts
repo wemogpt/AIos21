@@ -8,12 +8,18 @@ import type { CardThemeConfig } from "@/types"
 
 export function useLocalCardTheme() {
   const { theme: globalTheme } = useCardTheme()
-  const [localTheme, setLocalTheme] = useState<CardThemeConfig>(globalTheme)
+  const [localTheme, setLocalTheme] = useState<CardThemeConfig>({
+    ...globalTheme,
+    frostedOpacity: globalTheme.frostedOpacity || "normal",
+  })
   const [isCustomized, setIsCustomized] = useState(false)
 
   useEffect(() => {
     if (!isCustomized) {
-      setLocalTheme(globalTheme)
+      setLocalTheme({
+        ...globalTheme,
+        frostedOpacity: globalTheme.frostedOpacity || "normal",
+      })
     }
   }, [globalTheme, isCustomized])
 
@@ -24,7 +30,10 @@ export function useLocalCardTheme() {
 
   const resetToGlobal = () => {
     setIsCustomized(false)
-    setLocalTheme(globalTheme)
+    setLocalTheme({
+      ...globalTheme,
+      frostedOpacity: globalTheme.frostedOpacity || "normal",
+    })
   }
 
   return { localTheme, updateLocalTheme, resetToGlobal }

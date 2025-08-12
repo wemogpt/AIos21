@@ -97,7 +97,7 @@ export default async function PCHomePage({
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             {locale === 'zh' 
-              ? "专为桌面端设计的现代化组件库，提供丰富的UI组件、主题定制和响应式设计支持"
+              ? "专为桌面端设计的现代化组��库，提供丰富的UI组件、主题定制和响应式设计支持"
               : "Modern component library designed for desktop applications, providing rich UI components, theme customization and responsive design support"
             }
           </p>

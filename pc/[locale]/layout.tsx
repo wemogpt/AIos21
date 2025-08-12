@@ -1,14 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { ChartThemeProvider } from "@/components/providers/chart-theme-provider"
 import { CardThemeProvider } from "@/components/providers/card-theme-provider"
 import { FrostedEffectProvider } from "@/components/providers/frosted-effect-provider"
 import { DataChartThemeProvider } from "@/components/providers/data-chart-theme-provider"
-import { DynamicBackground } from "@/components/theme/dynamic-background"
+import { PCDynamicBackground } from "@/components/theme/pc-dynamic-background"
 import { cn } from "@/lib/utils"
-import { getDictionary, type Locale } from "@/lib/dictionaries"
+import { getDictionary } from "@/lib/dictionaries"
+import type { Locale } from "@/lib/dictionaries"
+import { i18n } from "@/lib/dictionaries"
 import "../../app/globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
 }
 
 export async function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "zh" }]
+  return i18n.locales.map((locale) => ({ locale }))
 }
 
 export default async function PCRootLayout({
@@ -30,7 +32,7 @@ export default async function PCRootLayout({
   params: { locale: Locale }
 }>) {
   const dict = await getDictionary(locale)
-  
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <head />
@@ -41,10 +43,8 @@ export default async function PCRootLayout({
               <CardThemeProvider>
                 <FrostedEffectProvider>
                   <div className="relative min-h-screen overflow-hidden">
-                    <DynamicBackground />
-                    <main className="relative z-10 min-h-screen">
-                      {children}
-                    </main>
+                    <PCDynamicBackground />
+                    <main className="relative z-10 min-h-screen">{children}</main>
                   </div>
                 </FrostedEffectProvider>
               </CardThemeProvider>

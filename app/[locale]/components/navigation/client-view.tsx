@@ -6,7 +6,9 @@ import { Breadcrumbs } from "@/components/navigation/breadcrumbs"
 import { SegmentedControl } from "@/components/navigation/segmented-control"
 import { ActionToolbar } from "@/components/navigation/action-toolbar"
 import { FilterTabs, type FilterTabItem } from "@/components/navigation/filter-tabs"
-import { Home, Settings, User, Star, Zap, Heart } from 'lucide-react'
+import { CategoryTabNavigation } from "@/components/navigation/category-tab-navigation"
+import { FilterPillNavigation } from "@/components/navigation/filter-pill-navigation"
+import { Home, Settings, User, Star, Zap, Heart } from "lucide-react"
 import { AppCard } from "@/components/layout/app-card"
 import { PillNavigation } from "@/components/navigation/pill-navigation"
 
@@ -48,6 +50,28 @@ export function NavigationComponentsClientView({ dict }: NavigationComponentsCli
     <main className="px-4">
       <div className="space-y-12 pt-16">
         <section>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">媒体导航</h3>
+          <AppCard className="p-0 overflow-hidden">
+            <CategoryTabNavigation
+              onSearchChange={(query) => console.log("Search:", query)}
+              onMenuClick={() => console.log("Menu clicked")}
+              onMessageClick={() => console.log("Message clicked")}
+              onTabChange={(tab) => console.log("Tab changed:", tab)}
+            />
+          </AppCard>
+        </section>
+
+        <section>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">食谱导航</h3>
+          <AppCard className="p-0 overflow-hidden">
+            <FilterPillNavigation
+              onSearchChange={(query) => console.log("Filter search:", query)}
+              onFilterChange={(filter) => console.log("Filter changed:", filter)}
+            />
+          </AppCard>
+        </section>
+
+        <section>
           <h3 className="text-xl font-semibold text-gray-800 mb-4">{dict.tabs}</h3>
           <AppCard className="flex justify-center items-center p-8">
             <Tabs tabs={dict.tabsContent} activeTab={activeTab} onTabChange={setActiveTab} />
@@ -64,11 +88,7 @@ export function NavigationComponentsClientView({ dict }: NavigationComponentsCli
         <section>
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Pill Navigation</h3>
           <AppCard className="flex justify-center items-center p-8">
-            <PillNavigation 
-              tabs={pillNavigationTabs} 
-              activeTab={activePillTab} 
-              onTabChange={setActivePillTab} 
-            />
+            <PillNavigation tabs={pillNavigationTabs} activeTab={activePillTab} onTabChange={setActivePillTab} />
           </AppCard>
         </section>
 

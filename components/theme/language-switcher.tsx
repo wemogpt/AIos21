@@ -1,16 +1,29 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export function LanguageSwitcher() {
   const pathname = usePathname()
+  const router = useRouter()
+
   const handleSwitchLanguage = (newLocale: string) => {
-    const currentLocale = pathname.split("/")[1]
-    const newPath = pathname.replace(`/${currentLocale}`, `/${newLocale}`)
-    window.location.assign(newPath)
+    // Set cookie for language preference, expires in 1 year.
+    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000;samesite=lax`
+
+    const segments = pathname.split("/")
+    // The path is like /<locale>/... or /pc/<locale>/...
+    // We need to replace the locale part.
+    if (segments[1] === "pc") {
+      segments[2] = newLocale
+    } else {
+      segments[1] = newLocale
+    }
+    const newPath = segments.join("/")
+
+    router.push(newPath)
   }
 
   return (

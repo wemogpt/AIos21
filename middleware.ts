@@ -1,24 +1,65 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
+import { match as matchLocale } from "@formatjs/intl-localematcher"
+import Negotiator from "negotiator"
+import { i18n } from "@/lib/dictionaries"
 
-const locales = ["zh", "en"]
-const defaultLocale = "zh"
+function getLocale(request: NextRequest): string {
+  // 1. Check cookie for user's preferred locale
+  const localeCookie = request.cookies.get("NEXT_LOCALE")?.value
+  if (localeCookie && i18n.locales.includes(localeCookie as any)) {
+    return localeCookie
+  }
+
+  // 2. Check the 'Accept-Language' header
+  const negotiatorHeaders: Record<string, string> = {}
+  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value))
+
+  let languages: string[] | undefined
+  try {
+    languages = new Negotiator({ headers: negotiatorHeaders }).languages()
+  } catch (error) {
+    console.error("Error parsing Accept-Language header:", error)
+    return i18n.defaultLocale
+  }
+
+  try {
+    return matchLocale(languages, i18n.locales, i18n.defaultLocale)
+  } catch (e) {
+    return i18n.defaultLocale
+  }
+}
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`)
+  const pathname = request.nextUrl.pathname
 
-  if (pathnameHasLocale) return
+  // Check if the path is for a static file, API route, or image, and ignore it.
+  if (pathname.startsWith("/api") || pathname.startsWith("/_next") || /\.(.*)$/.test(pathname)) {
+    return NextResponse.next()
+  }
 
-  // 如果 URL 中没有语言环境，则重定向到默认语言
-  const locale = defaultLocale
-  request.nextUrl.pathname = `/${locale}${pathname}`
-  return NextResponse.redirect(request.nextUrl)
+  // Check if the path is for PC routes
+  if (pathname.startsWith("/pc")) {
+    const pathnameIsMissingLocale = i18n.locales.every(
+      (locale) => !pathname.startsWith(`/pc/${locale}/`) && pathname !== `/pc/${locale}`,
+    )
+    if (pathnameIsMissingLocale) {
+      const locale = getLocale(request)
+      return NextResponse.redirect(new URL(`/pc/${locale}${pathname.substring(3) || "/"}`, request.url))
+    }
+  } else {
+    // Check for mobile/default routes
+    const pathnameIsMissingLocale = i18n.locales.every(
+      (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+    )
+    if (pathnameIsMissingLocale) {
+      const locale = getLocale(request)
+      return NextResponse.redirect(new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, request.url))
+    }
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    // 跳过所有内部路径 (_next) 和静态文件
-    "/((?!_next|api|favicon.ico|generic-user-avatar.png).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }

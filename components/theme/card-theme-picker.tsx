@@ -23,6 +23,10 @@ export function CardThemePicker() {
     setTheme((prev) => ({ ...prev, backgroundStyle: style }))
   }
 
+  const handleOpacityChange = (opacity: "normal" | "high") => {
+    setTheme((prev) => ({ ...prev, frostedOpacity: opacity }))
+  }
+
   return (
     <>
       <div className="relative z-50">
@@ -102,6 +106,35 @@ export function CardThemePicker() {
                     </button>
                   </div>
                 </div>
+
+                {theme.backgroundStyle === "frosted" && (
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm">透明度</Label>
+                    <div className="flex items-center p-1 bg-gray-100/80 rounded-full">
+                      <button
+                        onClick={() => handleOpacityChange("normal")}
+                        className={cn(
+                          "px-3 py-1 text-xs rounded-full transition-all",
+                          theme.frostedOpacity === "normal" || !theme.frostedOpacity
+                            ? "bg-white shadow"
+                            : "text-gray-500",
+                        )}
+                      >
+                        正常
+                      </button>
+                      <button
+                        onClick={() => handleOpacityChange("high")}
+                        className={cn(
+                          "px-3 py-1 text-xs rounded-full transition-all",
+                          theme.frostedOpacity === "high" ? "bg-white shadow" : "text-gray-500",
+                        )}
+                      >
+                        高
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between">
                   <Label className="text-sm">背景颜色</Label>
                   <input
